@@ -3,12 +3,13 @@ import json
 import os
 import time
 from history import History
+from crawler import crawler
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(BASE_DIR, '..', 'frontend')
 
 app = Bottle()
-
+crawl = crawler()
 history = History() 
 
 @app.route('/query', method='GET')
@@ -53,3 +54,4 @@ def serve_static(filename):
 
 if __name__ == '__main__':
     run(app=app, host='localhost', port=8080, debug=True)
+    

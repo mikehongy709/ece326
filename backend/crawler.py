@@ -110,6 +110,7 @@ class crawler(object):
         self._curr_words = None
         self._doc_words_forward_idx = {}
         self._words_doc_invert_idx = {}
+        self._doc_id_words_id_forward_idx = {}
         self._words_id_doc_id_invert_idx = {}
 
         # get all urls into the queue
@@ -126,6 +127,8 @@ class crawler(object):
         and then returns that newly inserted document's id."""
         ret_id = self._mock_next_doc_id
         self._mock_next_doc_id += 1
+        self._doc_words_forward_idx[url] = set()
+        self._doc_id_words_id_forward_idx[ret_id] = set()
         return ret_id
 
     # TODO remove me in real version
@@ -135,6 +138,7 @@ class crawler(object):
         ret_id = self._mock_next_word_id
         self._mock_next_word_id += 1
         self._words_doc_invert_idx[word] = set()
+        self._words_id_doc_id_invert_idx[ret_id] = set()
         return ret_id
 
     def word_id(self, word):
@@ -164,6 +168,13 @@ class crawler(object):
         self._doc_id_cache[url] = doc_id
         # print(f"{doc_id} document has been created")
         return doc_id
+    
+    def get_inverted_idx(self):
+        return self._words_id_doc_id_invert_idx
+    
+    def get_resolved_inverted_idx(self):
+        return self._words_doc_invert_idx
+
 
     def _fix_url(self, curr_url, rel):
         """Given a url and either something relative to that url or another url,
@@ -213,23 +224,18 @@ class crawler(object):
         # TODO: knowing self._curr_doc_id and the list of all words and their
         #       font sizes (in self._curr_words), add all the words into the
         #       database for this document
-        print("    num words=" + str(len(self._curr_words)))
-        # if len(self._curr_words) < 10:
-        #     for word, font in self._curr_words:
-        #         print(word, font)
-        # if self._curr_doc_id not in self._doc_words_forward_idx:
-        #     self._doc_words_forward_idx[self._curr_doc_id] = {}
-        #     print(f"forward index of {self._curr_doc_id} has been created")
-        # for word, font in self._curr_words:
-        #     self._doc_words_forward_idx[self._curr_doc_id][word] = font
+        # print("    num words=" + str(type(self._curr_words)))
+        pass
 
-    def _process_inverted_idx(self):
-        for word_id, font in self._curr_words:
-            if self._words_doc_invert_idx[word_id] == None:
-                self._words_doc_invert_idx[word_id] = set()
-            self._words_doc_invert_idx[word_id].add(self._curr_doc_id)
-            # print(f"{word_id} has added an inverse idx of {self._curr_doc_id}")
-
+    def _process_idx(self, word):
+        if word in self._words_doc_invert_idx:
+            self._words_doc_invert_idx[word].add(self._curr_url)
+        if self.word_id(word) in self._words_id_doc_id_invert_idx:
+            self._words_id_doc_id_invert_idx[self.word_id(word)].add(self.document_id(self._curr_url))
+        if self._curr_url in self._doc_words_forward_idx:
+            self._doc_words_forward_idx[self._curr_url].add(word)
+        if self.document_id(self._curr_url) in self._doc_id_words_id_forward_idx:
+            self._doc_id_words_id_forward_idx[self.document_id(self._curr_url)].add(self.word_id(word))
 
     def _increase_font_factor(self, factor):
         """Increade/decrease the current font size."""
@@ -252,8 +258,7 @@ class crawler(object):
             if word in self._ignored_words:
                 continue
             self._curr_words.append((self.word_id(word), self._font_size))
-            if word in self._words_doc_invert_idx:
-                self._words_doc_invert_idx[word].add(self._curr_url)
+            self._process_idx(word)
 
     def _text_of(self, elem):
         """Get the text inside some element without any tags."""
@@ -345,7 +350,6 @@ class crawler(object):
                 self._curr_words = []
                 self._index_document(soup)
                 self._add_words_to_document()
-                # self._process_inverted_idx()
                 # print("    url=" + repr(self._curr_url))
 
 
@@ -360,13 +364,4 @@ class crawler(object):
 if __name__ == "__main__":
     bot = crawler(None, "urls.txt")
     bot.crawl(depth=1)
-    
-    print("========================test====================")
-    print(f"{len(bot._doc_id_cache)} number of document has been loaded")
-    print(f"{len(bot._word_id_cache)} number of words has been loaded")
-    s = 0
-    for word, doc in bot._words_doc_invert_idx.items():
-        print(type(word), word)
-        print(type(doc), doc)
-    print("========================test====================")
     

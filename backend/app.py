@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(BASE_DIR, '..', 'frontend')
 
 app = Bottle()
-crawl = crawler()
+# crawl = crawler()
 history = History() 
 
 @app.route('/query', method='GET')
@@ -41,6 +41,7 @@ def query():
 @app.route('/history')
 def history_search():
     response.content_type = 'application/json'
+    print(str(history))
     return json.dumps(history.get_top_20())
 
 
@@ -54,4 +55,3 @@ def serve_static(filename):
 
 if __name__ == '__main__':
     run(app=app, host='localhost', port=8080, debug=True)
-    

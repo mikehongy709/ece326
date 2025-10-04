@@ -18,8 +18,6 @@ searchButton.disabled = true
 dropdownBtn.addEventListener("click", () => {
     if (historyDropdown.style.display === "none") {
        get_top_20_history()  
-    } else {
-       clear_history()
     }
     historyDropdown.style.display = 
     historyDropdown.style.display === "block" ? "none" : "block";
@@ -40,6 +38,7 @@ function get_top_20_history() {
 
 function show_history(data) {
     if (data) {
+        historyTable.innerHTML = ''
         for (let key in data) {
             const resultElement = document.createElement('tr');
             // resultElement.className = 'result-item';
@@ -53,10 +52,6 @@ function show_history(data) {
     } else {
         historyTable.innerHTML = '';
     }
-}
-
-function clear_history() {
-    historyTable.innerHTML = ''
 }
 
 searchForm.addEventListener('submit', function(e) {
@@ -77,7 +72,6 @@ function submitQuery(query){
   .then(response => response.json()) 
   .then(data => {
       console.log("搜索结果：", data.result);
-      //把 data 渲染到页面上
       activateResult(data.result)
   })
   .catch(error => {
@@ -86,7 +80,6 @@ function submitQuery(query){
 }
 
 function activateResult(dict) {
-        // Display results
     if (dict) {
         for (let key in dict) {
             const resultElement = document.createElement('tr');
@@ -102,12 +95,6 @@ function activateResult(dict) {
     }
 }
 
-// Enable/disable search button based on input
 searchInput.addEventListener('input', function() {
     searchButton.disabled = !this.value.trim();
 });
-
-
-dropdownBtn.addEventListener('click', function() {
-
-})

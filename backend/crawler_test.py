@@ -51,11 +51,9 @@ def test_forward_and_inverted_index():
     c._process_idx(google)
     c._process_idx(search)
 
-    # 检查正排索引
     assert doc_id in c._doc_id_words_id_forward_idx
     assert c.word_id(google) in c._doc_id_words_id_forward_idx[doc_id]
 
-    # 检查倒排索引
     word_id = c.word_id(google)
     assert doc_id in c._words_id_doc_id_invert_idx[word_id]
 
@@ -83,8 +81,7 @@ def test_resolved_inverted_index():
     c._process_idx(search)
     c._process_idx(engine)
 
-    resolved = c.get_resolved_inverted_idx()
-    # 应该是可读字符串
+    resolved = c.get_resolved_inverted_idx()    
     assert "google" in resolved
     assert "http://google.ca" in resolved["google"]
     assert "search" in resolved

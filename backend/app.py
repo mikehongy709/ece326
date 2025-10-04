@@ -16,7 +16,7 @@ history = History()
 def query():
     query = request.query.get('q', '')
     print(f"Received query: {query}")
-    splited_query = query.split(' ')
+    splited_query = [w.lower() for w in query.split(' ') if w.strip() != '']
     dic = {}
     for word in splited_query:
         history.add(word)

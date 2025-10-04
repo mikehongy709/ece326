@@ -1,27 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Query Interface</title>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.css?v=3">
 </head>
+
 <body>
+    <header class="site-header">
+        <svg class="site-logo" width="64" height="64" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#7C4DFF" />
+                    <stop offset="50%" stop-color="#00E5FF" />
+                    <stop offset="100%" stop-color="#00C853" />
+                </linearGradient>
+                <radialGradient id="g2" cx="45%" cy="40%" r="60%">
+                    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+                    <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+                </radialGradient>
+            </defs>
+
+            <circle cx="108" cy="108" r="70" fill="none" stroke="url(#g1)" stroke-width="16" />
+            <circle cx="108" cy="108" r="46" fill="url(#g2)" />
+            <path d="M150 150 L220 220" stroke="url(#g1)" stroke-width="20" stroke-linecap="round" />
+            <circle cx="108" cy="108" r="82" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="6" />
+
+            <circle cx="108" cy="108" r="88" fill="none" stroke="url(#g1)" stroke-width="5" stroke-linecap="round"
+                stroke-dasharray="70 220">
+                <animateTransform attributeName="transform" type="rotate" from="0 108 108" to="360 108 108" dur="2.5s"
+                    repeatCount="indefinite" />
+            </circle>
+        </svg>
+
+        <span class="site-title">SimpleSearch</span>
+    </header>
+
     <div class="container">
-        <h1>Search Interface</h1>
-        <p class="subtitle">Enter a keyword or phrase to search</p>
-        
-        <form class="search-form" id="searchForm">
+        <h1>Enter a keyword or phrase to search</h1>
+        <p class="subtitle">Click the dropdown to view the Top 20 searched keywords</p>
+
+        <form class="search-form" id="searchForm" action="/" method="get">
             <div class="input-group">
                 <div class="input-wrapper">
-                    <input type="text" class="search-input" id="searchInput"  placeholder="Enter your search query..." autocomplete="off">
-                    <button type="button" class="dropdown-button" id="dropdownButton">
-                    <i>▼</i>
-                    </button>
+                    <input type="text" class="search-input" id="searchInput" name="keywords"
+                        placeholder="Enter your search query..." autocomplete="off">
+                    <button type="button" class="dropdown-button" id="dropdownButton"><i>▼</i></button>
                 </div>
                 <div class="search-history-dropdown" id="searchHistoryDropdown">
-                    <table class="history-table" id="history">
-                    </table>
+                    <table class="history-table" id="history"></table>
                     <div class="history-actions">
                         <button type="button" id="clearHistory">Clear All History</button>
                     </div>
@@ -29,24 +58,21 @@
             </div>
             <button type="submit" value="submit" class="search-button" id="searchButton">Search</button>
         </form>
-        
+
         <div class="loading" id="loadingIndicator">
             <div class="spinner"></div>
             <p>Searching...</p>
         </div>
-        
+
         <div class="search-results" id="searchResults">
             <h2>Search Results</h2>
             <div id="resultsContainer">
-                <!-- Results will be populated here -->
-                 <table class="result-table" id="results">
-                        
-                </table>
+                <table class="result-table" id="results"></table>
             </div>
         </div>
     </div>
 
     <script src="script.js"></script>
-
 </body>
+
 </html>

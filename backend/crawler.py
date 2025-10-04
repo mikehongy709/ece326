@@ -169,12 +169,11 @@ class crawler(object):
         # print(f"{doc_id} document has been created")
         return doc_id
     
-    def get_inverted_idx(self):
+    def get_inverted_index(self):
         return self._words_id_doc_id_invert_idx
-    
-    def get_resolved_inverted_idx(self):
-        return self._words_doc_invert_idx
 
+    def get_resolved_inverted_index(self):
+        return self._words_doc_invert_idx
 
     def _fix_url(self, curr_url, rel):
         """Given a url and either something relative to that url or another url,
